@@ -20,19 +20,27 @@ function ConstructionSite() {
 
   const addToCart = (productId) => {
     const updatedProducts = products.map((product) =>
-      product.id === productId ? { ...product, quantity: product.quantity + 1 } : product
+      product.id === productId
+        ? { ...product, quantity: product.quantity + 1 }
+        : product
     );
 
     const existingCartItem = cart.find((item) => item.id === productId);
     if (existingCartItem) {
       const updatedCart = cart.map((item) =>
         item.id === productId
-          ? { ...item, quantity: item.quantity + 1, totalPrice: (item.quantity + 1) * item.price }
+          ? {
+              ...item,
+              quantity: item.quantity + 1,
+              totalPrice: (item.quantity + 1) * item.price,
+            }
           : item
       );
       setCart(updatedCart);
     } else {
-      const productToAdd = updatedProducts.find((product) => product.id === productId);
+      const productToAdd = updatedProducts.find(
+        (product) => product.id === productId
+      );
       setCart([...cart, { ...productToAdd, totalPrice: productToAdd.price }]);
     }
 
@@ -45,11 +53,20 @@ function ConstructionSite() {
     );
     const updatedCart = cart.map((item) =>
       item.id === productId
-        ? { ...item, quantity: newQuantity, totalPrice: newQuantity * item.price }
+        ? {
+            ...item,
+            quantity: newQuantity,
+            totalPrice: newQuantity * item.price,
+          }
         : item
     );
     setCart(updatedCart);
     setProducts(updatedProducts);
+  };
+
+  const removeFromCart = (productId) => {
+    const updatedCart = cart.filter((item) => item.id !== productId);
+    setCart(updatedCart);
   };
 
   const renderProducts = () => {
@@ -60,7 +77,12 @@ function ConstructionSite() {
 
   const renderCartItems = () => {
     return cart.map((item) => (
-      <CartItem key={item.id} item={item} handleQuantityChange={handleQuantityChange} />
+      <CartItem
+        key={item.id}
+        item={item}
+        handleQuantityChange={handleQuantityChange}
+        removeFromCart={removeFromCart}
+      />
     ));
   };
 
